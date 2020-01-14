@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="font-size: 20pt;">
+      Barcelona
+    </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon color="light" slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="display: flex; justify-content: center; color: white; font-weight: 100;">
+    <ion-label>Updated on: 16. Mon, 1:20 AM</ion-label>
+  </div>
+
+  <div class="wrapper">
+    <!-- weather condition -->
+    <div class="weatherCondition">
+      <img src="../assets/condition/sun-4-64.png">
+      <ion-label style="margin-left: 15px;">
+        Hot
+      </ion-label>
+    </div>
+
+    <!-- weather numeric -->
+    <div>
+      <div class="weatherNumeric">
+        <div>
+          <ion-label style=" font-size: 110pt;">
+            25°
+          </ion-label>
+        </div>
+
+        <div style="font-size: 20pt; margin-top: 30px;">
+          <div style="border-bottom: 1px solid grey;">
+            <ion-label>
+              28°C
+            </ion-label>
+          </div>
+
+          <div>
+            <ion-label>
+              20°C
+            </ion-label>
+          </div>
+        </div>
+      </div>
+
+      <!-- indicators -->
+      <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+        <div class="indicator">
+          <img src="../assets/indicator/temperature-2-24.png">
+          <ion-label>Feels like</ion-label>
+          <ion-label>20°C</ion-label>
+        </div>
+
+        <div class="indicator">
+          <img src="../assets/indicator/wind.png">
+          <ion-label>Wind</ion-label>
+          <ion-label>2 km/h</ion-label>
+        </div>
+
+        <div class="indicator">
+          <img src="../assets/indicator/humidity.png">
+          <ion-label>Humidity</ion-label>
+          <ion-label>25 %</ion-label>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <div class="indicator">
+          <img src="../assets/indicator/gauge.png">
+          <ion-label>Pressure</ion-label>
+          <ion-label>30.25 in</ion-label>
+        </div>
+
+        <div class="indicator">
+          <img src="../assets/indicator/witness.png">
+          <ion-label>Visibility</ion-label>
+          <ion-label>N/A</ion-label>
+        </div>
+
+        <div class="indicator">
+          <img src="../assets/indicator/info.png">
+          <ion-label>Created by</ion-label>
+          <ion-label>Maid</ion-label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>
