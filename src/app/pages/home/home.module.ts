@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
+import { WeatherDetailsComponent } from 'src/app/components/weather-details/weather-details.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { HomePage } from './home.page';
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, WeatherDetailsComponent]
 })
 export class HomePageModule {}
