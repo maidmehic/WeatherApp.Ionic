@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title style="font-size: 20pt;">
-      Sarajevo
+      {{activeSlideCityName}}
     </ion-title>
     <ion-buttons slot="primary">
-      <ion-button>
-        <ion-icon color="light" slot="icon-only" name="add"></ion-icon>
+      <ion-button (click)="presentPopover($event)">
+        <ion-icon color="light" slot="icon-only" name="more" mode="md"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -16,13 +16,9 @@
     <ion-label>Updated on: {{lastUpdateDate}}</ion-label>
   </div>
 
-  <ion-slides>
-    <ion-slide>
-      <app-weather-details [forecast]="forecast"></app-weather-details>
-    </ion-slide>
-
-    <ion-slide>
-      <app-weather-details [forecast]="forecast"></app-weather-details>
+  <ion-slides (ionSlideWillChange)="changeToolbarTitle()">
+    <ion-slide *ngFor="let item of forecast">
+      <app-weather-details [forecast]="item"></app-weather-details>
     </ion-slide>
   </ion-slides>
 

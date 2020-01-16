@@ -1,0 +1,20 @@
+<ion-content>
+  <div style="font-family: Roboto; margin-top: 80px;">
+    <div style="display: flex; align-items: center; justify-content: flex-end;">
+      <div style="position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 15pt;">
+        <ion-label>Search Locations</ion-label>
+      </div>
+      <div (click)="dismiss()">
+        <ion-chip outline color="tertiary">
+          <ion-label>Cancel</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <ion-searchbar [(ngModel)]="search"></ion-searchbar>
+
+  </div>
+</ion-content>

@@ -8,6 +8,8 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import { WeatherDetailsComponent } from 'src/app/components/weather-details/weather-details.component';
+import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { ModalComponent } from 'src/app/components/modal/modal.component';
 
 @NgModule({
   imports: [
@@ -16,6 +18,7 @@ import { WeatherDetailsComponent } from 'src/app/components/weather-details/weat
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage, WeatherDetailsComponent]
+  declarations: [HomePage, WeatherDetailsComponent, PopoverComponent, ModalComponent],
+  entryComponents:[PopoverComponent, ModalComponent]
 })
 export class HomePageModule {}
