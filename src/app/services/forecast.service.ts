@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Forecast } from '../models/forecast.model';
+import { City } from '../models/city.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,24 @@ export class ForecastService {
       .set('units', 'metric');
 
     return this.httpClient.get<Forecast>(url, { params: params });
+  }
+
+  getCities(name: string, page: number): Observable<City[]> {
+
+    let url = "https://weather-cities.p1714.app.fit.ba/api/values";
+    let params;
+    if (/\S/.test(name)) {
+      params = new HttpParams()
+        .set('name', name)
+        .set('page', page.toString())
+        .set('perPage', '100');
+    } else {
+      params = new HttpParams()
+        .set('page', page.toString())
+        .set('perPage', '100');
+    }
+
+    return this.httpClient.get<City[]>(url, { params: params });
   }
 
   onDeleteCity() {

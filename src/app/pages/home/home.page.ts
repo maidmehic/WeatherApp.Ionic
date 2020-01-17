@@ -29,13 +29,13 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.counter = 0;
-    this.cityIds = [3191281, 5809844, 3189146, 2950158, 3117732, 787595];
+    this.cityIds = [3191281, 3195839, 3189146, 2950158, 3117732, 787595];
     this.activeSlideCityName = "N/A";
     this.lastUpdateDate = "N/A";
 
     this.forecastService.deleteCity.subscribe(
       () => {
-        this.deleteCityFromSlides();
+        this.presentAlert(this.activeSlideCityName);
       }
     );
 
@@ -61,12 +61,17 @@ export class HomePage implements OnInit {
   }
 
   async deleteCityFromSlides() {
-    this.presentAlert(this.activeSlideCityName);
+    let index = await this.getActiveSlidesIndex();
+    this.forecast.splice(index, 1);
+    this.changeToolbarTitle();
   }
 
   async changeToolbarTitle() {
     let index = await this.getActiveSlidesIndex();
-    this.activeSlideCityName = this.forecast[index].name;
+    if (index <= (this.forecast.length - 1))
+      this.activeSlideCityName = this.forecast[index].name;
+    else
+      this.activeSlideCityName = this.forecast[--index].name;
   }
 
   async getActiveSlidesIndex() {
@@ -89,7 +94,7 @@ export class HomePage implements OnInit {
         {
           text: 'OK',
           handler: async () => {
-            console.log("deleting city on position " + await this.getActiveSlidesIndex());
+            await this.deleteCityFromSlides();
           }
         },
         {

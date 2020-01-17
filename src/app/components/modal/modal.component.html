@@ -1,20 +1,34 @@
-<ion-content>
-  <div style="font-family: Roboto; margin-top: 80px;">
-    <div style="display: flex; align-items: center; justify-content: flex-end;">
-      <div style="position: absolute;
+<div style="font-family: Roboto; margin-top: 50px;">
+  <div style="display: flex; align-items: center; justify-content: flex-end;">
+    <div style="position: absolute;
     text-align: center;
     width: 100%;
     font-size: 15pt;">
-        <ion-label>Search Locations</ion-label>
-      </div>
-      <div (click)="dismiss()">
-        <ion-chip outline color="tertiary">
-          <ion-label>Cancel</ion-label>
-        </ion-chip>
-      </div>
+      <ion-label>Search Locations</ion-label>
     </div>
-
-    <ion-searchbar [(ngModel)]="search"></ion-searchbar>
-
+    <div (click)="dismiss()">
+      <ion-chip outline color="tertiary">
+        <ion-label>Cancel</ion-label>
+      </ion-chip>
+    </div>
   </div>
+
+  <ion-searchbar [(ngModel)]="search" (ionChange)="searchChanged()"></ion-searchbar>
+</div>
+
+<ion-content>
+  <ion-virtual-scroll [items]="cities" approxItemHeight="100px">
+    <ion-item *virtualItem="let item;">
+      <ion-img slot="start" src="https://www.countryflags.io/{{item.country}}/shiny/64.png" style="background: white;"></ion-img>
+      <ion-label class="ion-text-capitalize">
+        <h2>{{item.name}}</h2>
+        <p>{{item.country}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-virtual-scroll>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content style="margin-top: 15px;" loadingSpinner="crescent" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
