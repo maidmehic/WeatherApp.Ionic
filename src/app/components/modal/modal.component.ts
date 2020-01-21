@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { ForecastService } from 'src/app/services/forecast.service';
 import { City } from 'src/app/models/city.model';
 @Component({
@@ -12,7 +12,11 @@ export class ModalComponent implements OnInit {
   search: string;
   cities: City[];
   page: number;
-  constructor(private modalCtr: ModalController, private service: ForecastService) { }
+  isLoading: boolean;
+  disableVirtualScroll: boolean;
+  hasDataToDisplay: boolean;
+
+  constructor(private modalCtr: ModalController, private service: ForecastService, public toastController: ToastController) { }
 
   ngOnInit() {
     this.search = "";
@@ -32,17 +36,26 @@ export class ModalComponent implements OnInit {
   }
 
   getCities(event?) {
+    if (this.cities.length < 1)
+      this.isLoading = true;
+
     this.service.getCities(this.search, this.page).subscribe(
       (res: City[]) => {
         if (event)
           event.target.complete();
+        this.disableVirtualScroll = false;
+        this.isLoading = false;
+        this.hasDataToDisplay = true;
         this.cities = this.cities.concat(res);
-        console.log(this.cities.length);
       },
       (err) => {
         if (event)
           event.target.complete();
         console.log(err);
+        this.isLoading = false;
+        this.disableVirtualScroll = true;
+        this.hasDataToDisplay = false;
+        this.presentToast();
       }
     )
   }
@@ -50,5 +63,18 @@ export class ModalComponent implements OnInit {
   loadData($event) {
     this.page++;
     this.getCities($event);
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'No more results...',
+      duration: 2000
+    });
+    toast.present();
+  }
+
+  addCityToActiveCities(item: City) {
+    this.service.onAddCity(item.id);
+    this.dismiss();
   }
 }

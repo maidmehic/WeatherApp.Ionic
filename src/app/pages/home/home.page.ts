@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ForecastService } from 'src/app/services/forecast.service';
 import { Forecast } from 'src/app/models/forecast.model';
 import { DatePipe } from '@angular/common';
@@ -10,7 +10,7 @@ import { PopoverComponent } from 'src/app/components/popover/popover.component';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
 
   @ViewChild(IonSlides, { static: false }) slider: IonSlides;
   cityIds: number[];
@@ -29,7 +29,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.counter = 0;
-    this.cityIds = [3191281, 3195839, 3189146, 2950158, 3117732, 787595];
+    this.cityIds = [3191281];
     this.activeSlideCityName = "N/A";
     this.lastUpdateDate = "N/A";
 
@@ -39,10 +39,21 @@ export class HomePage implements OnInit {
       }
     );
 
+    this.forecastService.addCity.subscribe(
+      (cityId: number) => {
+        this.cityIds = this.cityIds.concat(cityId);
+        this.getForecast(this.cityIds[this.counter], true);
+      }
+    );
+
     this.getForecast(this.cityIds[this.counter]);
   }
 
-  getForecast(cityId: number) {
+  ngOnDestroy(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  getForecast(cityId: number, autoSlideTo: boolean = false) {
     this.forecastService.getForecastByCityId(cityId).subscribe(
       (res: Forecast) => {
         this.forecast = this.forecast.concat(res);
@@ -50,6 +61,11 @@ export class HomePage implements OnInit {
           this.getForecast(this.cityIds[this.counter]);
         else {
           this.lastUpdateDate = this.datePipe.transform(Date.now(), "d. E, h:mm a")
+          if (autoSlideTo) {
+            setTimeout(() => {
+              this.slider.slideTo(this.counter);
+            }, 10)
+          }
           this.changeToolbarTitle();
           console.log(this.forecast);
         }

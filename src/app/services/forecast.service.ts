@@ -11,10 +11,13 @@ export class ForecastService {
 
   private BASE_URL: string = "https://api.openweathermap.org/data/2.5/";
   private deleteCity$ = new Subject<any>();
+  private addCity$ = new Subject<number>();
   deleteCity: Observable<any>;
+  addCity: Observable<number>;
 
   constructor(private httpClient: HttpClient) {
     this.deleteCity = this.deleteCity$.asObservable();
+    this.addCity = this.addCity$.asObservable();
   }
 
   getForecastByCityId(cityId: number): Observable<Forecast> {
@@ -48,5 +51,9 @@ export class ForecastService {
 
   onDeleteCity() {
     this.deleteCity$.next();
+  }
+
+  onAddCity(cityId: number) {
+    this.addCity$.next(cityId);
   }
 }
