@@ -3,6 +3,13 @@
 @import '~roboto-fontface/css/roboto/roboto-fontface.css';
 /** Ionic CSS Variables **/
 :root {
+  --ion-color-clear: linear-gradient(#51a4da,#91c5e7);
+  --ion-color-night: linear-gradient(#122259,#9561a1);
+  --ion-color-storm: linear-gradient(#4066a4,#ceada6);
+  --ion-color-cloud: linear-gradient(#5594b3,#c0d0d9);
+  --ion-color-fog: linear-gradient(#bc8db9,#5d5f90);
+  --ion-color-sleet: linear-gradient(#787c87,#aeb7be);
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -74,4 +81,23 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+}
+
+.ion-color-clear {
+  --ion-color-base: var(--ion-color-clear) !important;
+}
+.ion-color-night {
+  --ion-color-base: var(--ion-color-night) !important;
+}
+.ion-color-storm {
+  --ion-color-base: var(--ion-color-storm) !important;
+}
+.ion-color-cloud {
+  --ion-color-base: var(--ion-color-cloud) !important;
+}
+.ion-color-fog {
+  --ion-color-base: var(--ion-color-fog) !important;
+}
+.ion-color-sleet {
+  --ion-color-base: var(--ion-color-sleet) !important;
 }

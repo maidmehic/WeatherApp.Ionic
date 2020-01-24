@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ForecastService } from 'src/app/services/forecast.service';
 import { Forecast } from 'src/app/models/forecast.model';
 import { DatePipe } from '@angular/common';
-import { IonSlides, PopoverController, AlertController } from '@ionic/angular';
+import { IonSlides, PopoverController, AlertController, NumericValueAccessor } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 
 @Component({
@@ -16,7 +16,8 @@ export class HomePage implements OnInit, OnDestroy {
   cityIds: number[];
   forecast: Forecast[] = [];
   lastUpdateDate: string;
-
+  contentBgColor: string;
+  toolbarBgColor: string;
   activeSlideCityName: string;
   counter: number;
 
@@ -28,6 +29,8 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.contentBgColor = "clear";
+    this.toolbarBgColor = "#51a4da";
     this.counter = 0;
     this.cityIds = [3191281];
     this.activeSlideCityName = "N/A";
@@ -88,6 +91,31 @@ export class HomePage implements OnInit, OnDestroy {
       this.activeSlideCityName = this.forecast[index].name;
     else
       this.activeSlideCityName = this.forecast[--index].name;
+
+    if (this.forecast[index].weather[0].id >= 200 && this.forecast[index].weather[0].id <= 232) {
+      this.contentBgColor = "night";
+      this.toolbarBgColor = "#4066a4";
+    }
+    else if (this.forecast[index].weather[0].id >= 300 && this.forecast[index].weather[0].id <= 622) {
+      this.contentBgColor = "sleet";
+      this.toolbarBgColor = "#787c87";
+    }
+    else if (this.forecast[index].weather[0].id >= 701 && this.forecast[index].weather[0].id <= 781) {
+      this.contentBgColor = "fog";
+      this.toolbarBgColor = "#bc8db9";
+    }
+    else if (this.forecast[index].weather[0].id === 801 || this.forecast[index].weather[0].id === 802 || this.forecast[index].weather[0].id === 803 || this.forecast[index].weather[0].id === 804) {
+      this.contentBgColor = "cloud";
+      this.toolbarBgColor = "#5594b3";
+    }
+    else if (this.forecast[index].weather[0].id === 800 && this.forecast[index].weather[0].icon === "01n") {
+      this.contentBgColor = "night";
+      this.toolbarBgColor = "#122259";
+    }
+    else {
+      this.contentBgColor = "clear";
+      this.toolbarBgColor = "#51a4da";
+    }
   }
 
   async getActiveSlidesIndex() {
