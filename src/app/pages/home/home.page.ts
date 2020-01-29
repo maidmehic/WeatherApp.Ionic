@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ForecastService } from 'src/app/services/forecast.service';
 import { Forecast } from 'src/app/models/forecast.model';
 import { DatePipe } from '@angular/common';
-import { IonSlides, PopoverController, AlertController, NumericValueAccessor } from '@ionic/angular';
+import { IonSlides, PopoverController, AlertController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,8 @@ export class HomePage implements OnInit, OnDestroy {
     private forecastService: ForecastService,
     private datePipe: DatePipe,
     private popoverController: PopoverController,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private geolocation: Geolocation
   ) { }
 
   ngOnInit() {
@@ -44,8 +46,17 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.forecastService.addCity.subscribe(
       (cityId: number) => {
-        this.cityIds = this.cityIds.concat(cityId);
-        this.getForecast(this.cityIds[this.counter], true);
+        let duplicate = this.cityIds.includes(cityId);
+        if (!duplicate) {
+          this.cityIds = this.cityIds.concat(cityId);
+          this.getForecast(this.cityIds[this.counter], true);
+        }
+      }
+    );
+
+    this.forecastService.autoLocate.subscribe(
+      () => {
+        this.getCurrentPosition();
       }
     );
 
@@ -56,27 +67,54 @@ export class HomePage implements OnInit, OnDestroy {
     throw new Error("Method not implemented.");
   }
 
-  getForecast(cityId: number, autoSlideTo: boolean = false) {
-    this.forecastService.getForecastByCityId(cityId).subscribe(
-      (res: Forecast) => {
-        this.forecast = this.forecast.concat(res);
-        if (++this.counter < this.cityIds.length)
-          this.getForecast(this.cityIds[this.counter]);
-        else {
-          this.lastUpdateDate = this.datePipe.transform(Date.now(), "d. E, h:mm a")
-          if (autoSlideTo) {
-            setTimeout(() => {
-              this.slider.slideTo(this.counter);
-            }, 10)
+  getForecast(cityId: number, autoSlideTo: boolean = false, getByCityId: boolean = true, lat: number = 0, lon: number = 0) {
+    if (getByCityId) {
+      this.forecastService.getForecastByCityId(cityId).subscribe(
+        (res: Forecast) => {
+          this.forecast = this.forecast.concat(res);
+          if (++this.counter < this.cityIds.length)
+            this.getForecast(this.cityIds[this.counter]);
+          else {
+            this.lastUpdateDate = this.datePipe.transform(Date.now(), "d. E, h:mm a")
+            if (autoSlideTo) {
+              setTimeout(() => {
+                this.slider.slideTo(this.counter);
+              }, 10)
+            }
+            this.changeToolbarTitle();
+            console.log(this.forecast);
           }
-          this.changeToolbarTitle();
-          console.log(this.forecast);
+        },
+        (err) => {
+          console.log(err);
         }
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
+      )
+    } else {//autolocate
+      this.forecastService.getForecastByLatLon(lat, lon).subscribe(
+        (res: Forecast) => {
+          let duplicate = this.cityIds.includes(res.id);
+          if (!duplicate) {
+            this.forecast = this.forecast.concat(res);
+            this.cityIds = this.cityIds.concat(res.id);
+            if (++this.counter < this.cityIds.length)
+              this.getForecast(this.cityIds[this.counter]);
+            else {
+              this.lastUpdateDate = this.datePipe.transform(Date.now(), "d. E, h:mm a")
+              if (autoSlideTo) {
+                setTimeout(() => {
+                  this.slider.slideTo(this.counter);
+                }, 10)
+              }
+              this.changeToolbarTitle();
+              console.log(this.forecast);
+            }
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+    }
   }
 
   async deleteCityFromSlides() {
@@ -116,6 +154,18 @@ export class HomePage implements OnInit, OnDestroy {
       this.contentBgColor = "clear";
       this.toolbarBgColor = "#51a4da";
     }
+
+    this.forecastService.onChangeStatusBarColor(this.toolbarBgColor);
+  }
+
+  getCurrentPosition() {
+    this.geolocation.getCurrentPosition().then((res) => {
+      console.log(res.coords.latitude);
+      console.log(res.coords.longitude);
+      this.getForecast(0, true, false, res.coords.latitude, res.coords.longitude);
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
   }
 
   async getActiveSlidesIndex() {

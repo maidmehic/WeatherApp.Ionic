@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Forecast } from '../models/forecast.model';
 import { City } from '../models/city.model';
@@ -10,14 +10,22 @@ import { City } from '../models/city.model';
 export class ForecastService {
 
   private BASE_URL: string = "https://api.openweathermap.org/data/2.5/";
+
   private deleteCity$ = new Subject<any>();
   private addCity$ = new Subject<number>();
+  private changeStatusBarColor$ = new Subject<string>();
+  private autoLocate$ = new Subject<any>();
+
   deleteCity: Observable<any>;
   addCity: Observable<number>;
+  changeStatusBarColor: Observable<string>;
+  autoLocate: Observable<any>;
 
   constructor(private httpClient: HttpClient) {
     this.deleteCity = this.deleteCity$.asObservable();
     this.addCity = this.addCity$.asObservable();
+    this.changeStatusBarColor = this.changeStatusBarColor$.asObservable();
+    this.autoLocate = this.autoLocate$.asObservable();
   }
 
   getForecastByCityId(cityId: number): Observable<Forecast> {
@@ -25,6 +33,18 @@ export class ForecastService {
     let url = this.BASE_URL + "weather";
     const params = new HttpParams()
       .set('id', cityId.toString())
+      .set('appid', 'b4c8989fdd5a81b82dd63d94eff574d3')
+      .set('units', 'metric');
+
+    return this.httpClient.get<Forecast>(url, { params: params });
+  }
+
+  getForecastByLatLon(lat: number, lon: number): Observable<Forecast> {
+
+    let url = this.BASE_URL + "weather";
+    const params = new HttpParams()
+      .set('lat', lat.toString())
+      .set('lon', lon.toString())
       .set('appid', 'b4c8989fdd5a81b82dd63d94eff574d3')
       .set('units', 'metric');
 
@@ -55,5 +75,13 @@ export class ForecastService {
 
   onAddCity(cityId: number) {
     this.addCity$.next(cityId);
+  }
+
+  onChangeStatusBarColor(color: string) {
+    this.changeStatusBarColor$.next(color);
+  }
+
+  onAutoLocate() {
+    this.autoLocate$.next();
   }
 }

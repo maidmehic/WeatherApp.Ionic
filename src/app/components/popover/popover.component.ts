@@ -26,4 +26,9 @@ export class PopoverComponent implements OnInit {
     this.popoverCtr.dismiss();
     this.forecastService.onDeleteCity();
   }
+
+  autoLocate() {
+    this.popoverCtr.dismiss();
+    this.forecastService.onAutoLocate();
+  }
 }
