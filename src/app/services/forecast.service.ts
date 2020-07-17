@@ -33,7 +33,7 @@ export class ForecastService {
     let url = this.BASE_URL + "weather";
     const params = new HttpParams()
       .set('id', cityId.toString())
-      .set('appid', 'b4c8989fdd5a81b82dd63d94eff574d3')
+      .set('appid', '-------') //add your appid
       .set('units', 'metric');
 
     return this.httpClient.get<Forecast>(url, { params: params });
